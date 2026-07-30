@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, globalShortcut } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { loginWithSpotify, refreshAccessToken } = require('./auth');
@@ -51,6 +51,10 @@ ipcMain.handle('check-saved-login', () => {
 
 ipcMain.handle('close-app', () => {
   app.quit();
+});
+
+ipcMain.handle('minimize-app', () => {
+  win.minimize();
 });
 
 async function ensureFreshToken() {
@@ -136,8 +140,21 @@ ipcMain.handle('seek-to', async (event, positionMs) => {
 app.whenReady().then(() => {
   loadTokens();
   createWindow();
+
+  globalShortcut.register('Control+Alt+S', () => {
+    if (win.isMinimized()) {
+      win.restore();
+      win.focus();
+    } else {
+      win.minimize();
+    }
+  });
 });
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll();
 });

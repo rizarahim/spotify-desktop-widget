@@ -6,6 +6,10 @@ A frameless, always-on-top Spotify now-playing widget for Windows, built with El
 - Live now-playing track, artist, and album art
 - Spinning vinyl animation synced to playback state
 - Play / pause / skip controls
+- Seekable progress bar
+- Switchable themes (vinyl / blur card)
+- Minimize and close controls
+- Global shortcut (`Ctrl+Alt+S`) to minimize/restore from anywhere
 - Persistent login (Spotify PKCE auth)
 
 ## Setup

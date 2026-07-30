@@ -51,6 +51,19 @@
   }
   #closeBtn:hover { color: white; }
 
+  #minimizeBtn {
+    position: absolute;
+    top: 10px;
+    right: 36px;
+    z-index: 10;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 16px;
+    cursor: pointer;
+  }
+  #minimizeBtn:hover { color: white; }
+
   /* ---------- LOGIN SCREEN ---------- */
   #loginScreen {
     width: 300px; height: 150px;
@@ -163,6 +176,7 @@
   <button id="themeSwitchBtn" class="no-drag" title="Switch theme">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 100 20 1.5 1.5 0 001.06-2.56 1.5 1.5 0 011.06-2.56H16a4 4 0 004-4c0-5-4.48-9-8-9zm-5.5 9a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm3-4a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm5 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm3 4a1.5 1.5 0 110-3 1.5 1.5 0 010 3z"/></svg>
   </button>
+  <button id="minimizeBtn" class="no-drag" title="Minimize">&#8211;</button>
   <button id="closeBtn" class="no-drag">✕</button>
 
   <div id="loginScreen">
@@ -235,6 +249,7 @@
   });
 
   document.getElementById('closeBtn').addEventListener('click', () => window.spotifyAPI.closeApp());
+  document.getElementById('minimizeBtn').addEventListener('click', () => window.spotifyAPI.minimizeApp());
 
   document.getElementById('shareBtn').addEventListener('click', () => {
     alert('Share-to-Instagram-Story is coming in the next build!');
