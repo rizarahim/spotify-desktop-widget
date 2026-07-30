@@ -120,6 +120,10 @@ ipcMain.handle('skip-previous', async () => {
   });
 });
 
+ipcMain.handle('resize-window', (event, width, height) => {
+  win.setSize(width, height, true); // true = animate the resize
+});
+
 ipcMain.handle('seek-to', async (event, positionMs) => {
   if (!tokens) return;
   const token = await getValidToken();

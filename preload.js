@@ -8,5 +8,6 @@ contextBridge.exposeInMainWorld('spotifyAPI', {
   skipNext: () => ipcRenderer.invoke('skip-next'),
   skipPrevious: () => ipcRenderer.invoke('skip-previous'),
   seekTo: (positionMs) => ipcRenderer.invoke('seek-to', positionMs),
+  resizeWindow: (w, h) => ipcRenderer.invoke('resize-window', w, h),
   closeApp: () => ipcRenderer.invoke('close-app')
 });
