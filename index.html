@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', sans-serif;
+    background: transparent;
+    -webkit-app-region: drag;
+  }
+
+  button, .no-drag { -webkit-app-region: no-drag; }
+
+  #card {
+    width: 440px;
+    height: 110px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #1f1f24, #121214);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    position: relative;
+    color: white;
+  }
+
+  #closeBtn {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.4);
+    font-size: 16px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  #closeBtn:hover { color: white; }
+
+  #vinyl {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    background:
+      repeating-radial-gradient(circle at center,
+        #0a0a0a 0px, #0a0a0a 2px,
+        #1c1c1c 2px, #1c1c1c 4px);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    animation: spin 8s linear infinite;
+    animation-play-state: paused;
+  }
+
+  #vinyl.playing { animation-play-state: running; }
+
+  #vinyl img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #111;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  #info {
+    flex: 1;
+    min-width: 0;
+    padding: 0 16px;
+  }
+
+  #trackName {
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #artistName {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #progressRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  #progressBarBg {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  #progressBarFill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #1DB954, #4ade80);
+    border-radius: 4px;
+    transition: width 0.5s linear;
+  }
+
+  .timeLabel {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    min-width: 30px;
+  }
+
+  #controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  #controls button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    opacity: 0.85;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #controls button:hover { opacity: 1; }
+
+  #playPauseBtn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: white !important;
+    color: #111 !important;
+  }
+
+  #loginScreen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  #loginBtn {
+    padding: 12px 24px;
+    border-radius: 999px;
+    border: none;
+    background: #1DB954;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  #loginBtn:hover { background: #1ed760; }
+</style>
+</head>
+<body>
+
+  <div id="card">
+    <button id="closeBtn" class="no-drag">✕</button>
+
+    <div id="loginScreen">
+      <button id="loginBtn" class="no-drag">Login with Spotify</button>
+    </div>
+
+    <div id="playerScreen" style="display:none; align-items:center; width:100%;">
+      <div id="vinyl"><img id="albumArt" src=""></div>
+
+      <div id="info">
+        <div id="trackName">—</div>
+        <div id="artistName">—</div>
+        <div id="progressRow">
+          <span class="timeLabel" id="timeElapsed">0:00</span>
+          <div id="progressBarBg"><div id="progressBarFill"></div></div>
+          <span class="timeLabel" id="timeTotal">0:00</span>
+        </div>
+      </div>
+
+      <div id="controls" class="no-drag">
+        <button id="prevBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+        <button id="playPauseBtn">
+          <svg id="playIcon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="pauseIcon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+        </button>
+        <button id="nextBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zm-2 6L5.5 6v12z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const loginScreen = document.getElementById('loginScreen');
+  const playerScreen = document.getElementById('playerScreen');
+  const vinyl = document.getElementById('vinyl');
+  let isCurrentlyPlaying = false;
+
+  document.getElementById('closeBtn').addEventListener('click', () => {
+    window.spotifyAPI.closeApp();
+  });
+
+  function formatTime(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const min = Math.floor(totalSec / 60);
+    const sec = totalSec % 60;
+    return `${min}:${sec.toString().padStart(2, '0')}`;
+  }
+
+  function setPlayingState(playing) {
+    isCurrentlyPlaying = playing;
+    document.getElementById('playIcon').style.display = playing ? 'none' : 'block';
+    document.getElementById('pauseIcon').style.display = playing ? 'block' : 'none';
+    vinyl.classList.toggle('playing', playing);
+  }
+
+  async function showPlayer() {
+    loginScreen.style.display = 'none';
+    playerScreen.style.display = 'flex';
+    pollNowPlaying();
+  }
+
+  document.getElementById('loginBtn').addEventListener('click', async () => {
+    await window.spotifyAPI.login();
+    showPlayer();
+  });
+
+  document.getElementById('playPauseBtn').addEventListener('click', () => {
+    window.spotifyAPI.playPause();
+    setPlayingState(!isCurrentlyPlaying);
+  });
+  document.getElementById('nextBtn').addEventListener('click', () => window.spotifyAPI.skipNext());
+  document.getElementById('prevBtn').addEventListener('click', () => window.spotifyAPI.skipPrevious());
+
+  async function pollNowPlaying() {
+    const data = await window.spotifyAPI.getNowPlaying();
+    if (data && data.item) {
+      document.getElementById('trackName').textContent = data.item.name;
+      document.getElementById('artistName').textContent = data.item.artists.map(a => a.name).join(', ');
+      document.getElementById('albumArt').src = data.item.album.images[0].url;
+
+      const progressPct = (data.progress_ms / data.item.duration_ms) * 100;
+      document.getElementById('progressBarFill').style.width = progressPct + '%';
+      document.getElementById('timeElapsed').textContent = formatTime(data.progress_ms);
+      document.getElementById('timeTotal').textContent = formatTime(data.item.duration_ms);
+
+      setPlayingState(data.is_playing);
+    }
+    setTimeout(pollNowPlaying, 3000);
+  }
+
+  (async function init() {
+    const alreadyLoggedIn = await window.spotifyAPI.checkSavedLogin();
+    if (alreadyLoggedIn) showPlayer();
+  })();
+</script>
+</body>
+</html>
