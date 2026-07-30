@@ -193,7 +193,9 @@
         <div id="artistName">—</div>
         <div id="progressRow">
           <span class="timeLabel" id="timeElapsed">0:00</span>
-          <div id="progressBarBg"><div id="progressBarFill"></div></div>
+         <div id="progressBarBg" class="no-drag" style="cursor: pointer;">
+  <div id="progressBarFill"></div>
+</div>
           <span class="timeLabel" id="timeTotal">0:00</span>
         </div>
       </div>
@@ -248,6 +250,22 @@
     showPlayer();
   });
 
+  let currentDurationMs = 0;
+
+document.getElementById('progressBarBg').addEventListener('click', (e) => {
+  const bar = e.currentTarget;
+  const rect = bar.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+  const pct = clickX / rect.width;
+  const seekPositionMs = pct * currentDurationMs;
+
+  // Update UI immediately for responsiveness (before API confirms)
+  document.getElementById('progressBarFill').style.width = (pct * 100) + '%';
+  document.getElementById('timeElapsed').textContent = formatTime(seekPositionMs);
+
+  window.spotifyAPI.seekTo(seekPositionMs);
+});
+
   document.getElementById('playPauseBtn').addEventListener('click', () => {
     window.spotifyAPI.playPause();
     setPlayingState(!isCurrentlyPlaying);
@@ -258,6 +276,7 @@
   async function pollNowPlaying() {
     const data = await window.spotifyAPI.getNowPlaying();
     if (data && data.item) {
+      currentDurationMs = data.item.duration_ms;
       document.getElementById('trackName').textContent = data.item.name;
       document.getElementById('artistName').textContent = data.item.artists.map(a => a.name).join(', ');
       document.getElementById('albumArt').src = data.item.album.images[0].url;

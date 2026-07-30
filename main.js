@@ -120,6 +120,15 @@ ipcMain.handle('skip-previous', async () => {
   });
 });
 
+ipcMain.handle('seek-to', async (event, positionMs) => {
+  if (!tokens) return;
+  const token = await getValidToken();
+  await fetch(`https://api.spotify.com/v1/me/player/seek?position_ms=${Math.floor(positionMs)}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` }
+  });
+});
+
 app.whenReady().then(() => {
   loadTokens();
   createWindow();
