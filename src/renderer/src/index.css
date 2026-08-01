@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100vh;
+  background: transparent;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-app-region: drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.vinyl-groove {
+  background: repeating-radial-gradient(
+    circle at center,
+    #0a0a0a 0px,
+    #0a0a0a 2px,
+    #1c1c1c 2px,
+    #1c1c1c 4px
+  );
+  animation: spin 8s linear infinite;
+  animation-play-state: paused;
+}
+
+.vinyl-groove.playing {
+  animation-play-state: running;
+}

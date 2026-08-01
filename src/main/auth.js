@@ -1,6 +1,6 @@
-const crypto = require('crypto');
-const http = require('http');
-const { shell } = require('electron');
+import crypto from 'crypto';
+import http from 'http';
+import { shell } from 'electron';
 
 const CLIENT_ID = '0a0d87b139514c31b700aa1f4fe802a3';
 const REDIRECT_URI = 'http://127.0.0.1:8888/callback';
@@ -79,4 +79,4 @@ async function refreshAccessToken(refreshToken) {
   return res.json(); // { access_token, expires_in, ... } — refresh_token may or may not be reissued
 }
 
-module.exports = { loginWithSpotify, refreshAccessToken };
+export { loginWithSpotify, refreshAccessToken };

@@ -1,7 +1,7 @@
-const { app, BrowserWindow, ipcMain, globalShortcut } = require('electron');
-const path = require('path');
-const fs = require('fs');
-const { loginWithSpotify, refreshAccessToken } = require('./auth');
+import { app, BrowserWindow, ipcMain, globalShortcut } from 'electron';
+import path from 'path';
+import fs from 'fs';
+import { loginWithSpotify, refreshAccessToken } from './auth';
 
 let win;
 let tokens = null;
@@ -29,13 +29,17 @@ function createWindow() {
     x: 1440,   // adjust based on your screen resolution — see note below
     y: 20,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, '../preload/index.js'),
       contextIsolation: true,
       nodeIntegration: false
     }
   });
 
-  win.loadFile('index.html');
+  if (process.env.ELECTRON_RENDERER_URL) {
+    win.loadURL(process.env.ELECTRON_RENDERER_URL);
+  } else {
+    win.loadFile(path.join(__dirname, '../renderer/index.html'));
+  }
 }
 
 ipcMain.handle('spotify-login', async () => {
