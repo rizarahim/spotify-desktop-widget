@@ -12,7 +12,7 @@ const THEME_SIZES = {
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false)
-  const [theme, setTheme] = useState(() => localStorage.getItem('widgetTheme') || 'vinyl')
+  const [theme, setTheme] = useState('vinyl')
   const { nowPlaying, isPlaying, setIsPlaying } = useNowPlaying(loggedIn)
 
   useEffect(() => {
