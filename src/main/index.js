@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, globalShortcut } from 'electron';
+import { app, BrowserWindow, ipcMain, globalShortcut, screen } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { loginWithSpotify, refreshAccessToken } from './auth';
@@ -18,16 +18,20 @@ function loadTokens() {
 }
 
 function createWindow() {
+  const windowWidth = 460;
+  const windowHeight = 130;
+  const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
+
   win = new BrowserWindow({
-    width: 460,
-    height: 130,
+    width: windowWidth,
+    height: windowHeight,
     frame: false,
     alwaysOnTop: true,
     transparent: true,
     resizable: false,
     skipTaskbar: true,
-    x: 1440,   // adjust based on your screen resolution — see note below
-    y: 20,
+    x: Math.round((screenWidth - windowWidth) / 2),
+    y: Math.round((screenHeight - windowHeight) / 2),
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
       contextIsolation: true,
